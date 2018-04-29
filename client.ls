@@ -17,9 +17,11 @@ if Meteor.isClient
 			formEvent =
 				onsubmit: (e) ->
 					e.preventDefault!
+					zip = _.zipObject fields, _.map fields, (i) ->
+						e.target.children[i]value
+					zip._id = state[fields.toString!]?_id
+					Meteor.call \upsert, zip
 					state[fields.toString!] = null
-					Meteor.call \upsert, _.zipObject fields,
-						_.map fields, (i) -> e.target.children[i]value
 			view: -> m \form, formEvent,
 				_.map fields, (i) -> m \input,
 					name: i
@@ -42,3 +44,4 @@ if Meteor.isClient
 	coll.find!observe do
 		added: -> m.redraw!
 		removed: -> m.redraw!
+		changed: -> m.redraw!

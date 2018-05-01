@@ -5,7 +5,9 @@ if Meteor.isClient
 			datas = coll.find!fetch!
 			rowEvent = (i) ->
 				onclick: -> state[fields.toString!] = i
-				ondblclick: -> Meteor.call \remove, i
+				ondblclick: ->
+					Meteor.call \remove, i
+					state[fields.toString!] = null
 			view: -> m \table.bordered,
 				m \thead, m \tr, _.map fields, (i) ->
 					m \th, _.startCase i
@@ -34,12 +36,15 @@ if Meteor.isClient
 				m \h4, 'Mithril CRUD'
 				m \.row, _.map <[ form table ]>, (i) ->
 					m \.col.m6, m comp[i] fields
+				m \p, '1 click to update, 2 click to remove'
+
+	fields = <[ name address ]>
 
 	Meteor.subscribe \coll, onReady: ->
 		m.route document.body, \/crud,
-			'/table': comp.table <[ nama alamat ]>
-			'/form': comp.form <[ nama alamat ]>
-			'/crud': comp.crud <[ nama alamat ]>
+			'/table': comp.table fields
+			'/form': comp.form fields
+			'/crud': comp.crud fields
 
 	coll.find!observe do
 		added: -> m.redraw!

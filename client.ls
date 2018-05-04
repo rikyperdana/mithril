@@ -2,7 +2,11 @@ if Meteor.isClient
 
 	comp =
 		table: (fields) ->
-			datas = coll.find!fetch!
+			datas = do ->
+				if m.route.param \fields
+					_.filter coll.find!fetch!, (i) ->
+						m.route.param(\fields) is (.toString!) _.tail _.keys i
+				else coll.find!fetch!
 			rowEvent = (i) ->
 				onclick: -> state[fields.toString!] = i
 				ondblclick: ->
@@ -38,13 +42,30 @@ if Meteor.isClient
 					m \.col.m6, m comp[i] fields
 				m \p, '1 click to update, 2 click to remove'
 
-	fields = <[ name address ]>
+		menus: ->
+			view: -> m \div,
+				m \.navbar-fixed, m \nav, m \.nav-wrapper,
+					m \a.brand-logo.center, \CRUD
+					m \ul.right,
+						m \li, m \a, \Login
+						m \li, m \a, \Register
+				m \ul.fixed.side-nav,
+					m \li, m \a.center, m \b, 'Crud List'
+					do ->
+						_.uniq _.map coll.find!fetch!, (i) ->
+							(.toString!) _.tail _.keys i
+						.map (i) -> m \li, m \a,
+							href: "/menus/#i", oncreate: m.route.link, _.startCase i
+				if m.route.param \fields
+					m comp.crud (.split \,) m.route.param \fields
 
 	Meteor.subscribe \coll, onReady: ->
 		m.route document.body, \/crud,
-			'/table': comp.table fields
-			'/form': comp.form fields
-			'/crud': comp.crud fields
+			'/table': comp.table <[ name address ]>
+			'/form': comp.form <[ name address ]>
+			'/crud': comp.crud <[ name address ]>
+			'/menus': comp.menus!
+			'/menus/:fields': comp.menus!
 
 	coll.find!observe do
 		added: -> m.redraw!

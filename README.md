@@ -6,7 +6,7 @@
 git pull https://github.com/rikyperdana/mithril
 cd mithril
 meteor npm install --save
-meteorn
+meteor
 ```
 
 And then check http://localhost:3000 from your browser
@@ -22,7 +22,7 @@ reusable according to fields params passed to them. As an example, if you want t
 of contacts fields (name, phone, mobile), you can pass them to comp.form or comp.table as you can see on 
 client.ls
 
-Once the app has run, you can try http://localhost:3000/#!/name,phone,mobile
+Once the app has run, you can try http://localhost:3000/#!/menus/name,phone,mobile
 
 For each document stored in that single collection, the menus function will retrieve it and create links 
 for each unique keys combination it has

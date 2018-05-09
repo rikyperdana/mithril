@@ -2,7 +2,7 @@ if Meteor.isClient
 
 	comp =
 		table: (fields) ->
-			datas = do ->
+			datas =
 				if m.route.param \fields
 					_.filter coll.find!fetch!, (i) ->
 						m.route.param(\fields) is (.toString!) _.tail _.keys i
@@ -60,7 +60,7 @@ if Meteor.isClient
 					m comp.crud (.split \,) m.route.param \fields
 
 	Meteor.subscribe \coll, onReady: ->
-		m.route document.body, \/crud,
+		m.route document.body, \/menus,
 			'/table': comp.table <[ name address ]>
 			'/form': comp.form <[ name address ]>
 			'/crud': comp.crud <[ name address ]>
